@@ -100,13 +100,9 @@ def job_batch(self, group, settings):
 
 		batch[i] = f'{batch[i]} ({m.value.value})'
 
-	output = '\n'.join(batch)
-	if settings.output_batch:
-		with open(settings.output_batch, 'w') as f:
-			f.write(f'{j}\n')
-	else:
-		sys.stdout.write(output)
-		sys.stdout.write('\n')
+	with open(settings.output_batch, 'w') as f:
+		for b in batch:
+			f.write(f'{b}\n')
 
 	return ar.Ack()
 
@@ -116,6 +112,9 @@ ar.bind(job_batch)
 def create_job_batch(self, settings):
 	if not settings.input_batch:
 		return ar.Faulted('no input file specified')
+
+	if not settings.output_batch:
+		settings.output_batch = f'{settings.input_batch}.annotated'
 
 	group = ar.GroupTable(
 		parse=ar.CreateFrame(ar.SubscribeToListing, PARSE_SERVICE),
