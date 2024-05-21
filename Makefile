@@ -26,8 +26,8 @@ EXECUTABLES := job-batch parse codegen vm ansar-group
 BUILD := $(EXECUTABLES:%=dist/%)
 SPEC := $(EXECUTABLES:%=%.spec)
 
-INPUT_FILE?=
-OUTPUT_FILE?=
+INPUT_BATCH?=
+OUTPUT_BATCH?=
 
 # The default target is the development loop.
 all: test
@@ -66,7 +66,7 @@ job-batch: home
 	ansar add vm vm
 
 run:
-	ansar update job-batch --input-file=$(INPUT_FILE) --output-file=$(OUTPUT_FILE)
+	ansar update job-batch --input-file=$(INPUT_BATCH) --output-file=$(OUTPUT_BATCH)
 	ansar --debug-level=DEBUG run --main-role=job-batch
 
 clean:: clean-build
