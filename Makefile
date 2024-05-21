@@ -66,11 +66,11 @@ composite-application: home
 	ansar add vm vm
 
 run:
-	ansar update job-batch --input-file=$(INPUT_BATCH) --output-file=$(OUTPUT_BATCH)
+	ansar update job-batch --input-batch=$(INPUT_BATCH) --output-batch=$(OUTPUT_BATCH)
 	ansar run --main-role=job-batch
 
 run-debug:
-	ansar update job-batch --input-file=$(INPUT_BATCH) --output-file=$(OUTPUT_BATCH)
+	ansar update job-batch --input-batch=$(INPUT_BATCH) --output-batch=$(OUTPUT_BATCH)
 	ansar --debug-level=DEBUG run --main-role=job-batch
 
 clean:: clean-build
