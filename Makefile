@@ -59,13 +59,17 @@ home: $(ANSAR)
 
 #
 #
-job-batch: home
+composite-application: home
 	ansar add job-batch job-batch
 	ansar add parse parse
 	ansar add codegen codegen
 	ansar add vm vm
 
 run:
+	ansar update job-batch --input-file=$(INPUT_BATCH) --output-file=$(OUTPUT_BATCH)
+	ansar run --main-role=job-batch
+
+run-debug:
 	ansar update job-batch --input-file=$(INPUT_BATCH) --output-file=$(OUTPUT_BATCH)
 	ansar --debug-level=DEBUG run --main-role=job-batch
 
