@@ -24,6 +24,7 @@
 
 """
 
+import sys
 import ansar.connect as ar
 from job_if import *
 from parse_if import *
@@ -78,7 +79,7 @@ ar.bind(Job, JOB_DISPATCH)
 
 #
 def job_batch(self, group, settings):
-	with open(settings.input_batch) as file:
+	with open(settings.input_file) as file:
 		batch = [j.rstrip() for j in file]
 
 	running = {}
@@ -99,9 +100,13 @@ def job_batch(self, group, settings):
 
 		batch[i] = f'{batch[i]} ({m.value.value})'
 
-	with open(settings.output_batch, 'w') as f:
-		for j in batch:
+	output = '\n'.join(batch)
+	if settings.output_file:
+		with open(settings.output_file, 'w') as f:
 			f.write(f'{j}\n')
+	else:
+		sys.stdout.write(output)
+		sys.stdout.write('\n')
 
 	return ar.Ack()
 
@@ -109,6 +114,9 @@ ar.bind(job_batch)
 
 # Build the networking relationships.
 def create_job_batch(self, settings):
+	if not settings.input_file:
+		return ar.Faulted('no input file specified')
+
 	group = ar.GroupTable(
 		parse=ar.CreateFrame(ar.SubscribeToListing, PARSE_SERVICE),
 		codegen=ar.CreateFrame(ar.SubscribeToListing, CODEGEN_SERVICE),
@@ -130,19 +138,19 @@ ar.bind(create_job_batch)
 #
 #
 class Settings(object):
-    def __init__(self, input_batch=None, output_batch=None):
-        self.input_batch = input_batch
-        self.output_batch = output_batch
+    def __init__(self, input_file=None, output_file=None):
+        self.input_file = input_file
+        self.output_file = output_file
 
 SETTINGS_SCHEMA = {
-    'input_batch': ar.Unicode(),
-    'output_batch': ar.Unicode(),
+    'input_file': ar.Unicode(),
+    'output_file': ar.Unicode(),
 }
 
 ar.bind(Settings, object_schema=SETTINGS_SCHEMA)
 
 # Initial values.
-factory_settings = Settings(input_batch='batch', output_batch='output')
+factory_settings = Settings()
 
 #
 #
