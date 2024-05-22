@@ -90,4 +90,5 @@ default-network:
 	ansar network --published-services
 
 run-language:
-	ansar --debug-level=DEBUG run job-batch --main-role=job-batch
+	ansar update job-batch --input-batch=$(INPUT_BATCH) --output-batch=$(OUTPUT_BATCH)
+	ansar run job-batch --main-role=job-batch
